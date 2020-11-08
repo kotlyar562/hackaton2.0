@@ -5,6 +5,7 @@ window = Tk()
 window.geometry("400x700")
 window.title("HakatonPhone")
 window.resizable(False, False)
+window.config(bg="black")
 
 # функция изменения времени
 def checkClock():
@@ -14,6 +15,11 @@ def checkClock():
     else:
         clockNumbers.config(text=time.strftime("%H %M"))
     window.after(1000, checkClock)
+
+# функция для возврата на рабочий стол
+def backToDesktop():
+    hideItems()
+    showItems()
 
 # функция смены на рабочий стол
 def switchToDesktop(event):
@@ -27,11 +33,55 @@ def switchToLockScreen():
     startBackground.pack()
     clockNumbers.place(x=95, y=40)
 
+# функция показа следующей темы
+def switchToNextTheme():
+    global themeToSwitchId
+
+    if themeToSwitchId < len(listOfThemes) - 1:
+        themeToSwitchId += 1
+        themeToSwitch.config(image=listOfThemes[themeToSwitchId]["preview"])
+        themeName.config(text=listOfThemes[themeToSwitchId]["name"])
+
+# функция показа предыдущей темы
+def switchToPreviousTheme():
+    global themeToSwitchId
+
+    if themeToSwitchId > 0:
+        themeToSwitchId -= 1
+        themeToSwitch.config(image=listOfThemes[themeToSwitchId]["preview"])
+        themeName.config(text=listOfThemes[themeToSwitchId]["name"])
+
 # функция смены на приложение 'Темы'
 def switchToTheme():
     hideItems()
+    previousThemeButton.place(x=5, y=320)
+    nextThemeButton.place(x=350, y=320)
+    themeName.place(x=130, y=10)
+    themeName.config(text=listOfThemes[themeToSwitchId]["name"], bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    themeToSwitch.place(x=59, y=50)
+    themeToSwitch.config(image=listOfThemes[themeToSwitchId]["preview"])
 
-# функция показа всех кнопок приложений
+# функция замены текущей темы
+def replaceCurrentTheme(event):
+    backToDesktop()
+    window.config(bg=listOfThemes[themeToSwitchId]["bg"])
+    clockNumbers.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    startBackground.config(image=listOfThemes[themeToSwitchId]["image"])
+    app1.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app2.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app3.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app4.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app5.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app6.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app7.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app8.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    app9.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    button1.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    button2.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    nextThemeButton.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+    previousThemeButton.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
+
+# функция показа всех кнопок и приложений
 def showItems():
     startBackground.pack()
     clockNumbers.place(x=95, y=40)
@@ -60,40 +110,58 @@ def hideItems():
     app7.place_forget()
     app8.place_forget()
     app9.place_forget()
+    previousThemeButton.place_forget()
+    nextThemeButton.place_forget()
+    themeToSwitch.place_forget()
+    themeName.place_forget()
 
-# загрузка изображений в программу
+# создание фонов и иконок
 background1 = PhotoImage(file="static/backgrounds/background1.png")
 background2 = PhotoImage(file="static/backgrounds/background2.png")
 background3 = PhotoImage(file="static/backgrounds/background3.png")
+darkTheme = PhotoImage(file="static/themes/darkTheme.png")
+lightTheme = PhotoImage(file="static/themes/lightTheme.png")
+orangeTheme = PhotoImage(file="static/themes/orangeTheme.png")
 themeIcon = PhotoImage(file="static/icons/ThemeIcon.png")
 
 # создание заднего фона
 startBackground = Label(image=background1)
 startBackground.pack()
 
-# создение часов
-clockNumbers = Label(font=('Courier New', 50, 'bold'))
+# создание часов
+clockNumbers = Label(font=('Courier New', 50, 'bold'), bg="black", fg="white")
 clockNumbers.place(x=95, y=40)
 
-# создание кнопок приложений
-app1 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Theme", command=switchToTheme)
-app2 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app3 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app4 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app5 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app6 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app7 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app8 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
-app9 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name")
+# создание приложений
+app1 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Themes", command=switchToTheme, bg="black", fg="white")
+app2 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app3 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app4 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app5 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app6 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app7 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app8 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app9 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
 
 # создание кнопки 'назад на рабочий стол' и 'блокировки'
-button1 = Button(text="<", width=3, font=('Arial', 15, 'bold'), command=switchToLockScreen)
+button1 = Button(text="<", width=3, font=('Arial', 15, 'bold'), command=switchToLockScreen, bg="black", fg="white")
 button1.place_forget()
-button2 = Button(text="O", width=3, font=('Arial', 15, 'bold'), command=showItems)
+button2 = Button(text="O", width=3, font=('Arial', 15, 'bold'), command=backToDesktop, bg="black", fg="white")
 button2.place_forget()
 
-# биндим функцию на двойной клик
+# создание элементов для приложения "Темы"
+nextThemeButton = Button(text=">", width=3, font=('Arial', 15, 'bold'), command=switchToNextTheme, bg="black", fg="white")
+previousThemeButton = Button(text="<", width=3, font=('Arial', 15, 'bold'), command=switchToPreviousTheme, bg="black", fg="white")
+themeToSwitch = Label(width=280, height=550)
+themeToSwitchId = 0
+listOfThemes = [{"name":"Dark Theme", "preview":darkTheme, "image":background1, "bg":"black", "fg":"white"},
+                {"name":"Light Theme", "preview":lightTheme, "image":background2, "bg":"white", "fg":"black"},
+                {"name":"Orange Theme", "preview":orangeTheme, "image":background3, "bg":"orange", "fg":"black"}]
+themeName = Label(font=('Courier New', 15, 'bold'))
+
+# биндим функции
 startBackground.bind('<Double-Button-1>', switchToDesktop)
+themeToSwitch.bind('<Double-Button-1>', replaceCurrentTheme)
 
 # вызываем функцию изменения времени
 checkClock()
