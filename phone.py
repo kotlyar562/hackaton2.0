@@ -6,6 +6,7 @@ window.geometry("400x700")
 window.title("HakatonPhone")
 window.resizable(False, False)
 window.config(bg="black")
+root_calc = None
 
 # функция изменения времени
 def checkClock():
@@ -81,6 +82,15 @@ def replaceCurrentTheme(event):
     nextThemeButton.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
     previousThemeButton.config(bg=listOfThemes[themeToSwitchId]["bg"], fg=listOfThemes[themeToSwitchId]["fg"])
 
+# функция перехода на калькулятор
+def switchToCalc():
+    hideItems()
+    from modules.calc import root_calc
+    global root_calc
+    root_calc.pack()
+
+
+
 # функция показа всех кнопок и приложений
 def showItems():
     startBackground.pack()
@@ -99,6 +109,9 @@ def showItems():
 
 # функция прятания всех кнопок и приложений
 def hideItems():
+    global root_calc
+    if root_calc:
+        root_calc.pack_forget()
     startBackground.pack_forget()
     clockNumbers.place_forget()
     app1.place_forget()
@@ -134,7 +147,7 @@ clockNumbers.place(x=95, y=40)
 
 # создание приложений
 app1 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Themes", command=switchToTheme, bg="black", fg="white")
-app2 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
+app2 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Calc", command=switchToCalc, bg="black", fg="white")
 app3 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
 app4 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
 app5 = Button(width=65, height=65, image=themeIcon, compound=TOP, text="Name", bg="black", fg="white")
